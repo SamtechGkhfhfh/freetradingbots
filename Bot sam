@@ -1,0 +1,97 @@
+// Initialize variables
+let initialStake = 2;
+let currentStake = initialStake;
+let maxLosses = 2; // Maximum allowed consecutive losses
+let lossCount = 0;
+let winCount = 0;
+let maxWinStreak = 0;
+
+// Function to check market conditions and purchase contracts
+function trade() {
+    // Add logic to analyze market trend
+    let isBullish = checkBullishMarket();
+    let isBearish = checkBearishMarket();
+
+    if (isBullish) {
+        purchaseRise();
+    } else if (isBearish) {
+        purchaseFall();
+    } else {
+        setTimeout(trade, 1000); // Wait 1 second and check again if no clear trend
+    }
+}
+
+// Function to purchase Rise option
+function purchaseRise() {
+    // Place Rise trade
+    let tradeResult = executeTrade('Rise', currentStake); // Mock function to execute trade and return result
+
+    if (tradeResult === 'win') {
+        currentStake = initialStake; // Reset stake after a win
+        lossCount = 0; // Reset loss count
+        winCount++;
+        maxWinStreak = Math.max(maxWinStreak, winCount);
+    } else {
+        lossCount++;
+        winCount = 0;
+        if (lossCount <= maxLosses) {
+            currentStake *= 2; // Double the stake after a loss
+        } else {
+            currentStake = initialStake; // Reset stake after max consecutive losses
+            lossCount = 0; // Reset loss count
+        }
+    }
+    tradeAgain();
+}
+
+// Function to purchase Fall option
+function purchaseFall() {
+    // Place Fall trade
+    let tradeResult = executeTrade('Fall', currentStake); // Mock function to execute trade and return result
+
+    if (tradeResult === 'win') {
+        currentStake = initialStake; // Reset stake after a win
+        lossCount = 0; // Reset loss count
+        winCount++;
+        maxWinStreak = Math.max(maxWinStreak, winCount);
+    } else {
+        lossCount++;
+        winCount = 0;
+        if (lossCount <= maxLosses) {
+            currentStake *= 2; // Double the stake after a loss
+        } else {
+            currentStake = initialStake; // Reset stake after max consecutive losses
+            lossCount = 0; // Reset loss count
+        }
+    }
+    tradeAgain();
+}
+
+// Mock function to execute trade and return result (for demonstration purposes)
+function executeTrade(type, stake) {
+    // Implement trade execution logic with the trading platform API
+    // For demo purposes, we'll randomly simulate win or loss
+    let result = Math.random() > 0.5 ? 'win' : 'loss';
+    console.log(`Trade: ${type}, Stake: ${stake}, Result: ${result}`);
+    return result;
+}
+
+// Function to trade again
+function tradeAgain() {
+    setTimeout(trade, 1000); // Wait 1 second before next trade
+}
+
+// Function to check for a bullish market (mock logic for demonstration)
+function checkBullishMarket() {
+    // Add actual market analysis logic here
+    return Math.random() > 0.5; // Randomly simulate market condition
+}
+
+// Function to check for a bearish market (mock logic for demonstration)
+function checkBearishMarket() {
+    // Add actual market analysis logic here
+    return Math.random() > 0.5; // Randomly simulate market condition
+}
+
+// Start trading
+trade();
